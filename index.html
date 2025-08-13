@@ -8,12 +8,15 @@
   </head>
   <body>
     <main>
-      <div id="counters">
-       <p id="bonesCounter">Bones: 0</p>
-      </div>
-      <button id="clickElement" class="clickElement">CLICK!</button>
+      <div class="center-area">
+    <div id="counters" class="boneCounter">
+      <p id="bonesCounter" class="countfrfr">Bones: 0</p>
+    </div>
+    <img id="clickElement" class="clickElement" src="Bone.png" draggable="false"/>
+  </div>
       <div class="sidebar" id="sidebar">
         <div class="SaveButton" id="saveButton">Save</div>
+        <div class="ResetButton" id="resetButton">Reset</div>
         <div class="upgrade1" id="upgrade1">
           <h2 class="Upgrade1Elm">Skeleton</h2>
           <p class="Upgrade1Elm" id="skeletonCost">Cost: 10</p>
@@ -32,9 +35,15 @@
           
           <p class="Upgrade1Elm" id="GhoulCounter">Ghouls: 0</p> 
       </div>
+      <div class="upgrade4" id="upgrade4">
+          <h2 class="Upgrade1Elm">Ghoul</h2>
+          <p class="Upgrade1Elm" id="DeathKnightCost">Cost: 1000</p>
+          
+          <p class="Upgrade1Elm" id="GhoulCounter">Ghouls: 0</p> 
       </div>
-      <div class="bottomBar">
-
+      </div>
+      </div>
+  <div class="bottomBar"></div>
       </div>
     </main>
     <script src="index.js"></script>
