@@ -1,7 +1,8 @@
   const clickElement = document.getElementById("clickElement");
   const counters = document.getElementById("counters");
 
-const save = document.getElementById("saveButton");
+  const save = document.getElementById("saveButton");
+  const reset = document.getElementById("resetButton");
 
   const bonesCounter = document.getElementById("bonesCounter");
 
@@ -68,21 +69,73 @@ save.addEventListener("click", () => {
     alert("Game saved!");
 });
 
+
+
+setInterval(() => {
+    saveGame();
+    console.log("Game auto-saved")}, 15000);
+
  loadGame();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////// Initialize the counters
 
-  clickElement.addEventListener("click", () => {
-    count += 1;
-    bonesCounter.innerText = `Bones: ${count}`;
-  });
+  function formatBones(count) {
+  if (count >= 1000000000000000000000000000) return (count / 1000000000000000000000000000).toFixed(1).replace(/\.0$/, "") + "N";
+  if (count >= 1000000000000000000000000) return (count / 1000000000000000000000000).toFixed(1).replace(/\.0$/, "") + "Oc";
+  if (count >= 1000000000000000000000) return (count / 1000000000000000000000).toFixed(1).replace(/\.0$/, "") + "Sp";
+  if (count >= 1000000000000000000) return (count / 1000000000000000000).toFixed(1).replace(/\.0$/, "") + "Sx";
+  if (count >= 1000000000000000) return (count / 1000000000000000).toFixed(1).replace(/\.0$/, "") + "Q";
+  if (count >= 1000000000000) return (count / 1000000000000).toFixed(1).replace(/\.0$/, "") + "T";
+  if (count >= 1000000000) return (count / 1000000000).toFixed(1).replace(/\.0$/, "") + "B";
+  if (count >= 1000000) return (count / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (count >= 1000) return (count / 1000).toFixed(1).replace(/\.0$/, "") + "k";
+  return count;
+}
 
+// Update all bonesCounter.innerText assignments:
+bonesCounter.innerText = `Bones: ${formatBones(count)}`;
+
+// Example usage in click handler:
+clickElement.addEventListener("click", (e) => {
+  count += 1;
+  updateBonesCounter();
+
+  // Create the +1 element
+  const plusOne = document.createElement("span");
+  plusOne.innerText = "+1";
+  plusOne.className = "plus-one";
+
+  // Position it at the mouse click (relative to .center-area)
+  const parentRect = clickElement.parentElement.getBoundingClientRect();
+  plusOne.style.left = (e.clientX - parentRect.left) + "px";
+  plusOne.style.top = (e.clientY - parentRect.top) + "px";
+
+  // Add to the .center-area container
+  clickElement.parentElement.appendChild(plusOne);
+
+  // Animate and remove after animation
+  setTimeout(() => {
+    plusOne.style.transform = "translateY(-40px)";
+    plusOne.style.opacity = "0";
+  }, 10);
+  setTimeout(() => {
+    plusOne.remove();
+  }, 800);
+});
+
+function updateBonesCounter() {
+  bonesCounter.innerText = `Bones: ${formatBones(count)}`;
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////// Skeleton upgrade
 
   upgrade1.addEventListener("click", () => {
     if (count >= skeletonCost) {
         count -= skeletonCost;
-        bonesCounter.innerText = `Bones: ${count}`;
+        updateBonesCounter();
         skeletons += 1;
         skeletonCounter.innerText = `Skeletons: ${skeletons}`;
         skeletonCost = Math.round(skeletonCost * 1.15);
@@ -99,7 +152,7 @@ save.addEventListener("click", () => {
   upgrade2.addEventListener("click", () => {
     if (count >= zombieCost) {
         count -= zombieCost;
-        bonesCounter.innerText = `Bones: ${count}`;
+updateBonesCounter();
         zombies += 1;
         zombieCounter.innerText = `Zombies: ${zombies}`;
         zombieCost = Math.round(zombieCost * 1.15);
@@ -117,7 +170,7 @@ save.addEventListener("click", () => {
   upgrade3.addEventListener("click", () => {
     if (count >= ghoulCost) {
         count -= ghoulCost;
-        bonesCounter.innerText = `Bones: ${count}`;
+updateBonesCounter();
         ghouls += 1;
         ghoulCounter.innerText = `Ghouls: ${ghouls}`;
         ghoulCost = Math.round(ghoulCost * 1.15);
@@ -133,20 +186,40 @@ save.addEventListener("click", () => {
     setInterval(() => {
         if (skeletons > 0) {
             count += skeletons;
-            bonesCounter.innerText = `Bones: ${count}`;
+updateBonesCounter();
         }
     }, 1000);
 
     setInterval(() => {
         if (zombies > 0) {
             count += zombies * 10;
-            bonesCounter.innerText = `Bones: ${count}`;
+updateBonesCounter();
         }
     }, 1000);
 
     setInterval(() => {
         if (ghouls > 0) {
             count += ghouls * 100;
-            bonesCounter.innerText = `Bones: ${count}`;
+updateBonesCounter();
         }
     }, 1000);
+
+reset.addEventListener("click", () => {
+    localStorage.removeItem("clickerSave");
+     count = 0;
+    skeletons = 0;
+    skeletonCost = 10;
+    zombies = 0;
+    zombieCost = 100;
+    ghouls = 0;
+    ghoulCost = 1000;
+    
+    updateBonesCounter();
+    skeletonCounter.innerText = `Skeletons: ${skeletons}`;
+    skeletonCostDisplay.innerText = `Cost: ${skeletonCost}`;
+    zombieCounter.innerText = `Zombies: ${zombies}`;
+    zombieCostDisplay.innerText = `Cost: ${zombieCost}`;
+    ghoulCounter.innerText = `Ghouls: ${ghouls}`;
+    ghoulCostDisplay.innerText = `Cost: ${ghoulCost}`;
+    alert("Game reset!");
+  });
